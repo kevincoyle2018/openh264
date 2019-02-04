@@ -228,6 +228,8 @@ void H264DecodeInstance (ISVCDecoder* pDecoder, const char* kpH264FileName, cons
       pDst[0] = pData[0];
       pDst[1] = pData[1];
       pDst[2] = pData[2];
+
+printf("%p %p %p\n", pDst[0], pDst[1], pDst[2]);
     }
     iEnd    = WelsTime();
     iTotal += iEnd - iStart;
@@ -488,6 +490,8 @@ int32_t main (int32_t iArgC, char* pArgV[]) {
   if (iLevelSetting >= 0) {
     pDecoder->SetOption (DECODER_OPTION_TRACE_LEVEL, &iLevelSetting);
   }
+
+sDecParam.bLuminanceOnly = true;
 
   if (pDecoder->Initialize (&sDecParam)) {
     printf ("Decoder initialization failed.\n");

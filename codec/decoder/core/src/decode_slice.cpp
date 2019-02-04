@@ -178,12 +178,15 @@ int32_t WelsMbInterSampleConstruction (PWelsDecoderContext pCtx, PDqLayer pCurLa
     pCtx->pIdctFourResAddPredFunc (pDstY + 8 * iStrideL + 8, iStrideL, pScaledTCoeff + 3 * 64, pNzc + 10);
   }
 
-  const int8_t* pNzc = pCurLayer->pNzc[iMbXy];
-  int16_t* pScaledTCoeff = pCurLayer->pScaledTCoeff[iMbXy];
-  // Cb.
-  pCtx->pIdctFourResAddPredFunc (pDstU, iStrideC, pScaledTCoeff + 4 * 64, pNzc + 16);
-  // Cr.
-  pCtx->pIdctFourResAddPredFunc (pDstV, iStrideC, pScaledTCoeff + 5 * 64, pNzc + 18);
+  if (iStrideC) {
+    const int8_t* pNzc = pCurLayer->pNzc[iMbXy];
+    int16_t* pScaledTCoeff = pCurLayer->pScaledTCoeff[iMbXy];
+
+    // Cb.
+    pCtx->pIdctFourResAddPredFunc (pDstU, iStrideC, pScaledTCoeff + 4 * 64, pNzc + 16);
+    // Cr.
+    pCtx->pIdctFourResAddPredFunc (pDstV, iStrideC, pScaledTCoeff + 5 * 64, pNzc + 18);
+  }
 
   return ERR_NONE;
 }

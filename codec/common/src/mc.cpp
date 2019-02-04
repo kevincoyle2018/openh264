@@ -366,6 +366,11 @@ static inline void McChromaWithFragMv_c (const uint8_t* pSrc, int32_t iSrcStride
   }
 }
 
+void McChroma_noop (const uint8_t* /*pSrc*/, int32_t /*iSrcStride*/, uint8_t* /*pDst*/, int32_t /*iDstStride*/,
+                 int16_t /*iMvX*/, int16_t /*iMvY*/, int32_t /*iWidth*/, int32_t /*iHeight*/)
+{
+}
+
 void McChroma_c (const uint8_t* pSrc, int32_t iSrcStride, uint8_t* pDst, int32_t iDstStride,
                  int16_t iMvX, int16_t iMvY, int32_t iWidth, int32_t iHeight)
 //pSrc has been added the offset of mv
@@ -4197,7 +4202,7 @@ void PixelAvg_mmi(uint8_t* pDst, int32_t iDstStride, const uint8_t* pSrcA, int32
 #endif//HAVE_MMI
 } // anon ns.
 
-void WelsCommon::InitMcFunc (SMcFunc* pMcFuncs, uint32_t uiCpuFlag) {
+void WelsCommon::InitMcFunc (SMcFunc* pMcFuncs, uint32_t uiCpuFlag, bool bLumaOnly) {
   pMcFuncs->pfLumaHalfpelHor  = McHorVer20_c;
   pMcFuncs->pfLumaHalfpelVer  = McHorVer02_c;
   pMcFuncs->pfLumaHalfpelCen  = McHorVer22_c;
@@ -4263,4 +4268,8 @@ void WelsCommon::InitMcFunc (SMcFunc* pMcFuncs, uint32_t uiCpuFlag) {
     pMcFuncs->pMcLumaFunc       = McLuma_mmi;
   }
 #endif//HAVE_MMI
+
+  if (bLumaOnly) {
+    pMcFuncs->pMcChromaFunc     = McChroma_noop;
+  }
 }

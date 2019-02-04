@@ -857,9 +857,9 @@ int32_t SyncPictureResolutionExt (PWelsDecoderContext pCtx, const int32_t kiMbWi
 void InitDecFuncs (PWelsDecoderContext pCtx, uint32_t uiCpuFlag) {
   WelsBlockFuncInit (&pCtx->sBlockFunc, uiCpuFlag);
   InitPredFunc (pCtx, uiCpuFlag);
-  InitMcFunc (& (pCtx->sMcFunc), uiCpuFlag);
-  InitExpandPictureFunc (& (pCtx->sExpandPicFunc), uiCpuFlag);
-  DeblockingInit (&pCtx->sDeblockingFunc, uiCpuFlag);
+  InitMcFunc (& (pCtx->sMcFunc), uiCpuFlag, pCtx->pParam->bLuminanceOnly);
+  InitExpandPictureFunc (& (pCtx->sExpandPicFunc), uiCpuFlag, pCtx->pParam->bLuminanceOnly);
+  DeblockingInit (&pCtx->sDeblockingFunc, uiCpuFlag, pCtx->pParam->bLuminanceOnly);
 }
 
 namespace {
@@ -1045,6 +1045,16 @@ void InitPredFunc (PWelsDecoderContext pCtx, uint32_t uiCpuFlag) {
     pCtx->pGetI4x4LumaPredFunc[I4_PRED_H]     = WelsDecoderI4x4LumaPredH_mmi;
   }
 #endif//HAVE_MMI
+
+  if (pCtx->pParam->bLuminanceOnly) {
+    pCtx->pGetIChromaPredFunc[C_PRED_DC    ] = WelsIChromaPred_noop;
+    pCtx->pGetIChromaPredFunc[C_PRED_H     ] = WelsIChromaPred_noop;
+    pCtx->pGetIChromaPredFunc[C_PRED_V     ] = WelsIChromaPred_noop;
+    pCtx->pGetIChromaPredFunc[C_PRED_P     ] = WelsIChromaPred_noop;
+    pCtx->pGetIChromaPredFunc[C_PRED_DC_L  ] = WelsIChromaPred_noop;
+    pCtx->pGetIChromaPredFunc[C_PRED_DC_T  ] = WelsIChromaPred_noop;
+    pCtx->pGetIChromaPredFunc[C_PRED_DC_128] = WelsIChromaPred_noop;
+  }
 }
 
 //reset decoder number related statistics info

@@ -74,6 +74,10 @@ static inline void ExpandPictureLuma_c (uint8_t* pDst, const int32_t kiStride, c
   } while (i < kiPicH);
 }
 
+static inline void ExpandPictureChroma_noop (uint8_t* /*pDst*/, const int32_t /*kiStride*/, const int32_t /*kiPicW*/,
+    const int32_t /*kiPicH*/) {
+}
+
 static inline void ExpandPictureChroma_c (uint8_t* pDst, const int32_t kiStride, const int32_t kiPicW,
     const int32_t kiPicH) {
   uint8_t* pTmp                 = pDst;
@@ -114,7 +118,7 @@ static inline void ExpandPictureChroma_c (uint8_t* pDst, const int32_t kiStride,
   } while (i < kiPicH);
 }
 
-void InitExpandPictureFunc (SExpandPicFunc* pExpandPicFunc, const uint32_t kuiCPUFlag) {
+void InitExpandPictureFunc (SExpandPicFunc* pExpandPicFunc, const uint32_t kuiCPUFlag, bool bLumaOnly) {
   pExpandPicFunc->pfExpandLumaPicture        = ExpandPictureLuma_c;
   pExpandPicFunc->pfExpandChromaPicture[0]   = ExpandPictureChroma_c;
   pExpandPicFunc->pfExpandChromaPicture[1]   = ExpandPictureChroma_c;
@@ -147,6 +151,11 @@ void InitExpandPictureFunc (SExpandPicFunc* pExpandPicFunc, const uint32_t kuiCP
     pExpandPicFunc->pfExpandChromaPicture[1] = ExpandPictureChromaAlign_mmi;
   }
 #endif//HAVE_MMI
+
+  if (bLumaOnly) {
+    pExpandPicFunc->pfExpandChromaPicture[0]   = ExpandPictureChroma_noop;
+    pExpandPicFunc->pfExpandChromaPicture[1]   = ExpandPictureChroma_noop;
+  }
 }
 
 
@@ -162,9 +171,10 @@ void ExpandReferencingPicture (uint8_t* pData[3], int32_t iWidth, int32_t iHeigh
   const int32_t kiWidthUV   = kiWidthY >> 1;
   const int32_t kiHeightUV  = kiHeightY >> 1;
 
-
-
   pExpLuma (pPicY, iStride[0], kiWidthY, kiHeightY);
+
+  if (!pPicCb || !pPicCr) return;
+
   if (kiWidthUV >= 16) {
     // fix coding picture size as 16x16
     const bool kbChrAligned = /*(iWidthUV >= 16) && */ ((kiWidthUV & 0x0F) == 0); // chroma planes: (16+iWidthUV) & 15

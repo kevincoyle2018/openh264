@@ -190,7 +190,7 @@ int32_t InitFunctionPointers (sWelsEncCtx* pEncCtx, SWelsSvcCodingParam* pParam,
   }
 #endif
 
-  InitExpandPictureFunc (& (pFuncList->sExpandPicFunc), uiCpuFlag);
+  InitExpandPictureFunc (& (pFuncList->sExpandPicFunc), uiCpuFlag, false);
 
   /* Intra_Prediction_fn*/
   WelsInitIntraPredFuncs (pFuncList, uiCpuFlag);
@@ -211,7 +211,7 @@ int32_t InitFunctionPointers (sWelsEncCtx* pEncCtx, SWelsSvcCodingParam* pParam,
   /* Motion compensation */
   /*init pixel average function*/
   /*get one column or row pixel when refinement*/
-  InitMcFunc (&pFuncList->sMcFuncs, uiCpuFlag);
+  InitMcFunc (&pFuncList->sMcFuncs, uiCpuFlag, false);
   InitCoeffFunc (pFuncList, uiCpuFlag, pParam->iEntropyCodingModeFlag);
 
   WelsInitEncodingFuncs (pFuncList, uiCpuFlag);

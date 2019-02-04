@@ -93,7 +93,7 @@ typedef struct TagExpandPicFunc {
 void ExpandReferencingPicture (uint8_t* pData[3], int32_t iWidth, int32_t iHeight, int32_t iStride[3],
                                PExpandPictureFunc pExpLuma, PExpandPictureFunc pExpChrom[2]);
 
-void InitExpandPictureFunc (SExpandPicFunc* pExpandPicFunc, const uint32_t kuiCPUFlags);
+void InitExpandPictureFunc (SExpandPicFunc* pExpandPicFunc, const uint32_t kuiCPUFlags, bool bLumaOnly);
 
 #if defined(__cplusplus)
 }

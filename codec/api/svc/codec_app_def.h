@@ -621,8 +621,9 @@ typedef struct TagSVCDecodingParam {
   ERROR_CON_IDC eEcActiveIdc;          ///< whether active error concealment feature in decoder
   bool bParseOnly;                     ///< decoder for parse only, no reconstruction. When it is true, SPS/PPS size should not exceed SPS_PPS_BS_SIZE (128). Otherwise, it will return error info
 
-  SMemoryAllocator* pSAllocator;     ///< external memory allocator to use
+  SMemoryAllocator* pSAllocator;       ///< external memory allocator to use
   unsigned int  uiMaxBitstreamSize;    ///< bitstream buffer size to allocate in bytes. default MIN_ACCESS_UNIT_CAPACITY * MAX_BUFFERED_NUM
+  bool bLuminanceOnly;                 ///< only decode and allocate buffers for luminance
 
   SVideoProperty   sVideoProperty;    ///< video stream property
 } SDecodingParam, *PDecodingParam;

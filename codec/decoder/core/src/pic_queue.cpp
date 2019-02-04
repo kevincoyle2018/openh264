@@ -77,8 +77,10 @@ PPicture AllocPicture (PWelsDecoderContext pCtx, const int32_t kiPicWidth, const
 
   iPicWidth = WELS_ALIGN (kiPicWidth + (PADDING_LENGTH << 1), PICTURE_RESOLUTION_ALIGNMENT);
   iPicHeight = WELS_ALIGN (kiPicHeight + (PADDING_LENGTH << 1), PICTURE_RESOLUTION_ALIGNMENT);
-  iPicChromaWidth   = iPicWidth >> 1;
-  iPicChromaHeight  = iPicHeight >> 1;
+  if (!pCtx->pParam->bLuminanceOnly) {
+    iPicChromaWidth   = iPicWidth >> 1;
+    iPicChromaHeight  = iPicHeight >> 1;
+  }
 
   iLumaSize     = iPicWidth * iPicHeight;
   iChromaSize   = iPicChromaWidth * iPicChromaHeight;
@@ -102,7 +104,14 @@ PPicture AllocPicture (PWelsDecoderContext pCtx, const int32_t kiPicWidth, const
     pPic->pData[1]     = pPic->pBuffer[1] + /*WELS_ALIGN*/ (((1 + pPic->iLinesize[1]) * PADDING_LENGTH) >> 1);
     pPic->pData[2]     = pPic->pBuffer[2] + /*WELS_ALIGN*/ (((1 + pPic->iLinesize[2]) * PADDING_LENGTH) >> 1);
   }
-  pPic->iPlanes        = 3;    // yv12 in default
+  if (pCtx->pParam->bLuminanceOnly) {
+    pPic->iPlanes = 1;
+    pPic->iLinesize[1] = pPic->iLinesize[2] = 0;
+    pPic->pBuffer[1] = pPic->pBuffer[2] = NULL;
+    pPic->pData[1] = pPic->pData[2] = NULL;
+  } else {
+    pPic->iPlanes      = 3;    // yv12 in default
+  }
   pPic->iWidthInPixel  = kiPicWidth;
   pPic->iHeightInPixel = kiPicHeight;
   pPic->iFrameNum      = -1;

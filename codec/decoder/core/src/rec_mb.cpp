@@ -1026,6 +1026,9 @@ int32_t GetInterBPred (uint8_t* pPredYCbCr[3], uint8_t* pTempPredYCbCr[3], PWels
 
 int32_t RecChroma (int32_t iMBXY, PWelsDecoderContext pCtx, int16_t* pScoeffLevel, PDqLayer pDqLayer) {
   int32_t iChromaStride = pCtx->pCurDqLayer->pDec->iLinesize[1];
+
+  if (!iChromaStride) return ERR_NONE;
+
   PIdctFourResAddPredFunc pIdctFourResAddPredFunc = pCtx->pIdctFourResAddPredFunc;
 
   uint8_t i = 0;

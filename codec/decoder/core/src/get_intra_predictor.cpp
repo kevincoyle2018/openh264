@@ -1021,6 +1021,9 @@ void WelsIChromaPredDcNA_c (uint8_t* pPred, const int32_t kiStride) {
   } while (i-- > 0);
 }
 
+void WelsIChromaPred_noop (uint8_t* /*pPred*/, const int32_t /*kiStride*/) {
+}
+
 void WelsI16x16LumaPredV_c (uint8_t* pPred, const int32_t kiStride) {
   int32_t iTmp            = (kiStride << 4) - kiStride;
   const uint64_t kuiTop1  = LD64A8 (pPred - kiStride);

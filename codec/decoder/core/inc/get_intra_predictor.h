@@ -91,6 +91,8 @@ void WelsI16x16LumaPredDcTop_c (uint8_t* pPred, const int32_t kiStride);
 void WelsI16x16LumaPredDcLeft_c (uint8_t* pPred, const int32_t kiStride);
 void WelsI16x16LumaPredDcNA_c (uint8_t* pPred, const int32_t kiStride);
 
+void WelsIChromaPred_noop (uint8_t* pPred, const int32_t kiStride);
+
 #if defined(__cplusplus)
 extern "C" {
 #endif//__cplusplus

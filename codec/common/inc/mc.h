@@ -55,7 +55,7 @@ typedef struct TagMcFunc {
 
 namespace WelsCommon {
 
-void InitMcFunc (SMcFunc* pMcFunc, uint32_t iCpu);
+void InitMcFunc (SMcFunc* pMcFunc, uint32_t iCpu, bool bLumaOnly);
 
 } // namespace WelsCommon
 

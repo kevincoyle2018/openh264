@@ -54,7 +54,7 @@ namespace WelsDec {
  * \return  NONE
  */
 
-void  DeblockingInit (PDeblockingFunc pDeblockingFunc,  int32_t iCpu);
+void  DeblockingInit (SDeblockingFunc*  pFunc,  int32_t iCpu, bool bLumaOnly);
 
 
 /*!

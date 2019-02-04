@@ -1322,7 +1322,7 @@ void WelsDeblockingFilterSlice (PWelsDecoderContext pCtx, PDeblockingFilterMbFun
  * \return  NONE
  */
 
-void  DeblockingInit (SDeblockingFunc*  pFunc,  int32_t iCpu) {
+void  DeblockingInit (SDeblockingFunc* pFunc,  int32_t iCpu, bool bLumaOnly) {
   pFunc->pfLumaDeblockingLT4Ver     = DeblockLumaLt4V_c;
   pFunc->pfLumaDeblockingEQ4Ver     = DeblockLumaEq4V_c;
   pFunc->pfLumaDeblockingLT4Hor     = DeblockLumaLt4H_c;
@@ -1391,6 +1391,18 @@ void  DeblockingInit (SDeblockingFunc*  pFunc,  int32_t iCpu) {
     pFunc->pfChromaDeblockingEQ4Hor = DeblockChromaEq4H_mmi;
   }
 #endif//HAVE_MMI
+
+  if (bLumaOnly) {
+    pFunc->pfChromaDeblockingLT4Ver   = DeblockChromaLt_noop;
+    pFunc->pfChromaDeblockingEQ4Ver   = DeblockChromaEq_noop;
+    pFunc->pfChromaDeblockingLT4Hor   = DeblockChromaLt_noop;
+    pFunc->pfChromaDeblockingEQ4Hor   = DeblockChromaEq_noop;
+
+    pFunc->pfChromaDeblockingLT4Ver2  = DeblockChromaLt2_noop;
+    pFunc->pfChromaDeblockingEQ4Ver2  = DeblockChromaEq2_noop;
+    pFunc->pfChromaDeblockingLT4Hor2  = DeblockChromaLt2_noop;
+    pFunc->pfChromaDeblockingEQ4Hor2  = DeblockChromaEq2_noop;
+  }
 }
 
 } // namespace WelsDec
