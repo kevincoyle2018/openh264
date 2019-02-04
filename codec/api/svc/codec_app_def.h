@@ -606,7 +606,7 @@ typedef struct {
 typedef struct {
   void* pContext; ///< Any additional context needed by the allocator/deallocator.
   void* (*pfAllocate)(void* context, unsigned int size, const char* kpTag); ///< Allocator
-  void  (*pfDeallocate)(void* constext, void * ptr, const char* kpTag); ///< Deallocator
+  void  (*pfDeallocate)(void* context, void * ptr, const char* kpTag); ///< Deallocator
 } SMemoryAllocator;
 
 /**
@@ -623,7 +623,7 @@ typedef struct TagSVCDecodingParam {
 
   SMemoryAllocator* pSAllocator;       ///< external memory allocator to use
   unsigned int  uiMaxBitstreamSize;    ///< bitstream buffer size to allocate in bytes. default MIN_ACCESS_UNIT_CAPACITY * MAX_BUFFERED_NUM
-  bool bLuminanceOnly;                 ///< only decode and allocate buffers for luminance
+  bool bLuminanceOnly;                 ///< only allocate buffers for luminance
 
   SVideoProperty   sVideoProperty;    ///< video stream property
 } SDecodingParam, *PDecodingParam;
