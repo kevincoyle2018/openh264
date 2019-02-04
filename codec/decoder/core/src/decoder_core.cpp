@@ -582,7 +582,7 @@ int32_t InitBsBuffer (PWelsDecoderContext pCtx) {
 
   CMemoryAlign* pMa = pCtx->pMemAlign;
 
-  pCtx->iMaxBsBufferSizeInByte = pCtx->pParam->uiMaxBitstreamSize?pCtx->pParam->uiMaxBitstreamSize:MIN_ACCESS_UNIT_CAPACITY * MAX_BUFFERED_NUM;
+  pCtx->iMaxBsBufferSizeInByte = pCtx->pParam->uiBitstreamSize?pCtx->pParam->uiBitstreamSize:MIN_ACCESS_UNIT_CAPACITY * MAX_BUFFERED_NUM;
 
   if ((pCtx->sRawData.pHead = static_cast<uint8_t*> (pMa->WelsMallocz (pCtx->iMaxBsBufferSizeInByte,
                               "pCtx->sRawData.pHead"))) == NULL) {
