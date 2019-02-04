@@ -43,11 +43,14 @@ static uint32_t nCountRequestNum;
 static int32_t  g_iMemoryLength;
 #endif
 
-struct SInternalMemoryAllocator : public SMemoryAllocator
+static void* internalAllocator(void *, unsigned int uiSize, const char* kpTag )
 {
-    void* allocate(unsigned int s) { return malloc(s); }
-    void  deallocate(void * p) { free(p); }
-};
+  return ::malloc(uiSize);
+}
+static void internalDeallocator(void *, void * pPtr, const char* kpTag)
+{
+  ::free(pPtr);
+}
 
 CMemoryAlign::CMemoryAlign (const uint32_t kuiCacheLineSize, SMemoryAllocator * pSExtAllocator)
   : m_bExternalAllocator (pSExtAllocator)
@@ -63,7 +66,10 @@ CMemoryAlign::CMemoryAlign (const uint32_t kuiCacheLineSize, SMemoryAllocator * 
   if (m_bExternalAllocator) {
       m_pSMemoryAllocator = pSExtAllocator;
   } else {
-      m_pSMemoryAllocator = new SInternalMemoryAllocator();
+      m_pSMemoryAllocator = new SMemoryAllocator();
+      m_pSMemoryAllocator->pContext = NULL;
+      m_pSMemoryAllocator->pfAllocate = internalAllocator;
+      m_pSMemoryAllocator->pfDeallocate = internalDeallocator;
   }
 }
 
@@ -85,7 +91,7 @@ void* CMemoryAlign::WelsMalloc (const uint32_t kuiSize, const char* kpTag, const
   const int32_t kiActualRequestedSize   = kiTrialRequestedSize;
   const uint32_t kiPayloadSize          = kuiSize;
 
-  uint8_t* pBuf = (uint8_t*) m_pSMemoryAllocator->allocate(kiActualRequestedSize);
+  uint8_t* pBuf = (uint8_t*) m_pSMemoryAllocator->pfAllocate(m_pSMemoryAllocator->pContext, kiActualRequestedSize, kpTag);
   if (NULL == pBuf)
     return NULL;
 
@@ -163,7 +169,7 @@ void CMemoryAlign::WelsFree (void* pPointer, const char* kpTag) {
       fflush (fpMemChkPoint);
     }
 #endif
-    m_pSMemoryAllocator->deallocate (* (((void**) pPointer) - 1));
+    m_pSMemoryAllocator->pfDeallocate (m_pSMemoryAllocator->pContext, (* (((void**) pPointer) - 1)), kpTag);
   }
 }
 

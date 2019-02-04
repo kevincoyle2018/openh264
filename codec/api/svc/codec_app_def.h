@@ -603,11 +603,11 @@ typedef struct {
 /**
 * @brief Optional external allocator to use.
 */
-struct SMemoryAllocator {
-  virtual ~SMemoryAllocator() {}
-  virtual void* allocate(unsigned int) = 0; ///< Allocator
-  virtual void  deallocate(void *) = 0; ///< Deallocator
-};
+typedef struct {
+  void* pContext; ///< Any additional context needed by the allocator/deallocator.
+  void* (*pfAllocate)(void* context, unsigned int size, const char* kpTag); ///< Allocator
+  void  (*pfDeallocate)(void* constext, void * ptr, const char* kpTag); ///< Deallocator
+} SMemoryAllocator;
 
 /**
 * @brief SVC Decoding Parameters, reserved here and potential applicable in the future
